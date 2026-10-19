@@ -1,15 +1,11 @@
-# Beneficios PY 2.8
+# Beneficios PY 2.9 — Primer circuito verificado
 
-PWA estática para registrar compras y promociones de Itaú, Sudameris, Familiar, Ueno Bank y Banco GNB.
+**Qué funciona:** registro local de compras, selección de banco y tarjeta, búsqueda de comercio, carga automática de fichas verificadas desde `data/promociones_verificadas.json`, estimación del beneficio, control mensual de topes y exportación Excel.
 
-## Exportación
+**Promoción inicial comprobada:** Itaú, Stock, Visa Infinite, sábados, 20% de reintegro, tope de compras G. 3.000.000 por cliente y mes en rubro supermercados, hasta 31/12/2026. Fuente: https://www.itau.com.py/beneficios2/Detalle?b=16586&c=1457. El tope es compartido con compras del mismo rubro incluso fuera de la aplicación, por lo que el saldo local es orientativo.
 
-El botón **Exportar compras a Excel (.xlsx)** genera un libro compatible con Google Sheets con cinco pestañas. Se descarga al equipo local: para guardarlo en Google Drive hay que subirlo manualmente. La exportación no borra registros y funciona sin dependencias externas. **Exportar respaldo JSON** conserva el mecanismo de recuperación de datos.
+**Limitaciones:** no hay extracción integral de condiciones de los cinco bancos. El monitor existente consulta fuentes y genera hallazgos pendientes de revisión; no los convierte automáticamente en promociones calculables. Las fichas verificadas se incorporan automáticamente al abrir la app. Solo se incorpora información validada. No se garantiza que el sitio oficial mantenga la promoción sin cambios. No se sincronizan compras entre dispositivos.
 
-## Instalación
+**Prueba:** registrar compra con fecha sábado dentro de vigencia, Itaú → Infinite → Stock → G. 200.000. Debe ofrecer 20% y mostrar G. 40.000 estimados. La segunda compra actualiza el consumo mensual. Exportar Excel para guardar en Drive.
 
-Subí los archivos y carpetas a la raíz de GitHub Pages, incluida `.github/workflows/monitor.yml`. GitHub Pages: `main` / `root`. Actualizá la página y verificá la versión 2.8. No borres el almacenamiento del navegador.
-
-## Promociones
-
-El monitor cada 2 horas detecta cambios y candidatos, no confirma automáticamente las condiciones. Las promociones calculables requieren verificación de fuentes oficiales y su incorporación. Los cupos son estimaciones por promoción y mes calendario; límites compartidos entre promociones requieren reglas adicionales.
+**Instalación:** subir todos los archivos y carpetas a la raíz del repositorio; mantener `.github/workflows/monitor.yml`; GitHub Pages publica `main` / raíz. Respaldar JSON antes de actualizar.

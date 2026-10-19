@@ -1,4 +1,25 @@
 {
-  "updated_at": null,
-  "promotions": []
+  "promotions": [
+    {
+      "id": "itau-stock-infinite-2026",
+      "bank": "Itaú",
+      "cardType": "Infinite",
+      "merchant": "Stock",
+      "category": "Supermercados",
+      "percent": 20,
+      "cap": 0,
+      "purchaseCap": 3000000,
+      "start": "2026-03-07",
+      "end": "2026-12-31",
+      "days": [
+        6
+      ],
+      "url": "https://www.itau.com.py/beneficios2/Detalle?b=16586&c=1457",
+      "verified_at": "2026-10-19",
+      "status": "verificada",
+      "benefitType": "reintegro",
+      "capScope": "cliente-rubro-supermercados",
+      "note": "Tope de compras mensual de G. 3.000.000 por cliente (titular y adicionales), compartido en rubro supermercados; confirmar condiciones y otras compras fuera de la app."
+    }
+  ]
 }
