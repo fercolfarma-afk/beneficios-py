@@ -1,90 +1,56 @@
-"""Conservative public-page watcher. Extracts review-only candidates, never invents eligibility."""
-import datetime as dt
-import hashlib
-import json
-import os
-from pathlib import Path
-import re
-import sys
-import requests
-from bs4 import BeautifulSoup
-
-ROOT = Path(__file__).resolve().parents[1]
-CONFIG = json.loads((ROOT / 'data/config.json').read_text(encoding='utf-8'))
-DATA = ROOT / 'data/promotions.json'
-STATE = ROOT / 'data/source_state.json'
-HEADERS = {'User-Agent': 'BeneficiosPYMonitor/0.1 (public promotional information; GitHub project; respectful frequency)'}
-TODAY = dt.datetime.now(dt.timezone(dt.timedelta(hours=-3))).date()
-
-def get_text(html):
-    soup = BeautifulSoup(html, 'html.parser')
-    for t in soup(['script', 'style', 'nav', 'footer', 'header', 'noscript']): t.decompose()
-    for t in soup.select('main, article, .card, .w-dyn-item, .beneficio, .promocion'):
-        text = ' '.join(t.stripped_strings)
-        if 25 <= len(text) <= 1700 and re.search(r'\b(?:reintegro|descuento|ahorro|cuotas sin inter[eé]s)\b', text, re.I):
-            yield text
-    # Fallback: preserve snippets with explicit benefit phrases, not full-page fragments.
-    lines = [re.sub(r'\s+', ' ', x).strip() for x in soup.stripped_strings]
-    for i, line in enumerate(lines):
-        if re.search(r'\b(?:reintegro|descuento|ahorro|cuotas sin inter[eé]s)\b', line, re.I):
-            yield ' · '.join(lines[max(0, i-2):i+3])[:1200]
-
-def candidates(bank, url, html):
-    seen = set()
-    for text in get_text(html):
-        text = text.strip()
-        if len(text) < 25: continue
-        key = hashlib.sha256((bank + '|' + text.lower()).encode()).hexdigest()[:18]
-        if key in seen: continue
-        seen.add(key)
-        pct = re.search(r'(\d{1,2})(?:\s*%)\s*(?:de\s*)?(?:reintegro|descuento|ahorro)', text, re.I)
-        if not pct: pct = re.search(r'(?:reintegro|descuento|ahorro)\s*(?:de\s*)?(\d{1,2})\s*%', text, re.I)
-        yield {'id': key, 'bank': bank, 'merchant': '', 'title': text[:230], 'category': '', 'days': '', 'discount_percent': int(pct.group(1)) if pct else None, 'max_refund_pyg': None, 'start_date': None, 'end_date': None, 'source_url': url, 'status': 'review', 'first_seen': TODAY.isoformat(), 'last_seen': TODAY.isoformat()}
-
-def main():
-    old = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {'promotions': []}
-    prev = {x['id']: x for x in old.get('promotions', [])}
-    states = json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}
-    additions = []
-    successful = 0
-    for source in CONFIG['sources']:
-        bank, url = source['bank'], source['url']
-        try:
-            r = requests.get(url, headers=HEADERS, timeout=25)
-            r.raise_for_status()
-            digest = hashlib.sha256(r.content).hexdigest()
-            states[bank] = {'url': url, 'last_success': dt.datetime.now(dt.timezone.utc).isoformat(), 'sha256': digest, 'http_status': r.status_code, 'error': None}
-            successful += 1
-            for item in list(candidates(bank, url, r.text))[:100]:
-                if item['id'] in prev:
-                    item['first_seen'] = prev[item['id']].get('first_seen', TODAY.isoformat())
-                    # Preserve manually verified metadata when the same snippet is seen again.
-                    if prev[item['id']].get('status') == 'verified':
-                        item = prev[item['id']]
-                    item['last_seen'] = TODAY.isoformat()
-                else: additions.append(item)
-                prev[item['id']] = item
-            print(bank, 'OK', len(r.content), 'bytes')
-        except (requests.RequestException, ValueError) as exc:
-            states[bank] = {**states.get(bank, {}), 'url': url, 'error': str(exc)[:200], 'last_attempt': dt.datetime.now(dt.timezone.utc).isoformat()}
-            print(bank, 'ERROR', str(exc), file=sys.stderr)
-    # Avoid presenting vanished, expired, or old candidates as active. Retain 30 days for auditing.
-    cutoff = (TODAY - dt.timedelta(days=30)).isoformat()
-    result = sorted((x for x in prev.values() if x.get('last_seen', TODAY.isoformat()) >= cutoff), key=lambda x: (x['bank'], x['id']))
-    payload = {'generated_at': dt.datetime.now(dt.timezone(dt.timedelta(hours=-3))).isoformat(timespec='minutes'), 'promotions': result}
-    DATA.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    STATE.write_text(json.dumps(states, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    topic = os.environ.get('NTFY_TOPIC', '').strip()
-    if topic and additions:
-        # Private random topic name is a bearer secret; never publish it in the repository.
-        if not re.fullmatch(r'[A-Za-z0-9_-]{12,120}', topic):
-            print('NTFY_TOPIC inválido: usá 12-120 caracteres alfanuméricos, guion o guion bajo', file=sys.stderr)
-        else:
-            body = f'Beneficios PY detectó {len(additions)} posibles novedades para revisar en las fuentes oficiales.'
-            try: requests.post('https://ntfy.sh/' + topic, data=body.encode('utf-8'), headers={'Title': 'Beneficios PY: revisar novedades'}, timeout=15).raise_for_status()
-            except requests.RequestException as exc: print('No se pudo enviar alerta:', exc, file=sys.stderr)
-    if not successful:
-        print('Ninguna fuente pudo consultarse; revisá errores y accesibilidad.', file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == '__main__': main()
+"""Vigilancia de páginas oficiales: candidatos NO verificados, nunca ofertas calculables."""
+import datetime as dt, hashlib, json, os, pathlib, re, urllib.request
+from html.parser import HTMLParser
+ROOT=pathlib.Path(__file__).resolve().parents[1]
+SOURCES={
+ 'Itaú':'https://www.itau.com.py/Beneficios',
+ 'Sudameris':'https://www.sudameris.com.py/personas/beneficios',
+ 'Familiar':'https://www.familiar.com.py/promociones-tarjetas',
+ 'Ueno Bank':'https://www.ueno.com.py/personas/tarjetas/',
+ 'Banco GNB':'https://www.bancognb.com.py/',
+}
+class Text(HTMLParser):
+ def __init__(self):super().__init__();self.skip=0;self.out=[]
+ def handle_starttag(self,t,a):
+  if t in ('script','style','noscript'):self.skip+=1
+ def handle_endtag(self,t):
+  if t in ('script','style','noscript'):self.skip=max(0,self.skip-1)
+ def handle_data(self,s):
+  if not self.skip and s.strip():self.out.append(' '.join(s.split()))
+def run():
+ path=ROOT/'data'/'catalogo.json';path.parent.mkdir(parents=True,exist_ok=True)
+ try:old=json.loads(path.read_text(encoding='utf-8'))
+ except (OSError,ValueError):old={}
+ previous={x['bank']:x for x in old.get('sources',[]) if 'bank' in x}
+ now=dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
+ sources=[];candidates=[]
+ for bank,url in SOURCES.items():
+  item={'bank':bank,'url':url,'checked_at':now,'status':'error','changed':False}
+  try:
+   req=urllib.request.Request(url,headers={'User-Agent':'BeneficiosPY/2.3 (public promotions monitoring; contact via repository)','Accept':'text/html'})
+   with urllib.request.urlopen(req,timeout=22) as r:
+    final=r.geturl();data=r.read(2_000_000);ctype=r.headers.get('Content-Type','')
+   if 'html' not in ctype.lower():raise ValueError('Respuesta no HTML')
+   parser=Text();parser.feed(data.decode('utf-8','replace'))
+   lines=[s[:200] for s in parser.out if len(s)>3]
+   digest=hashlib.sha256(' '.join(lines).encode()).hexdigest()
+   item.update(status='ok',final_url=final,hash=digest,changed=bool(previous.get(bank,{}).get('hash') and previous[bank]['hash']!=digest))
+   # Hallazgos textuales no verificables automáticamente: NO se usan en cálculos.
+   selected=[]
+   for line in lines:
+    if re.search(r'\b(?:reintegro|descuento|ahorro|promoci[oó]n)\b',line,re.I) and re.search(r'\d{1,2}\s*%',line):
+     if line not in selected:selected.append(line)
+    if len(selected)>=25:break
+   candidates += [{'bank':bank,'summary':s,'source_url':url,'detected_at':now,'status':'pendiente_revision'} for s in selected]
+  except Exception as exc:
+   item['error']=str(exc)[:180]
+  sources.append(item)
+ # Preserve previous candidate results only when a source fails, clearly marked stale.
+ for bank in SOURCES:
+  if next(x for x in sources if x['bank']==bank)['status']!='ok':
+   candidates += [{**x,'status':'fuente_no_disponible'} for x in old.get('candidates',[]) if x.get('bank')==bank][:25]
+ output={'generated_at':now,'disclaimer':'Hallazgos no verificados: revisar bases y condiciones antes de crear promociones calculables.','sources':sources,'candidates':candidates}
+ serialized=json.dumps(output,ensure_ascii=False,indent=2)+'\n'
+ if not path.exists() or path.read_text(encoding='utf-8')!=serialized:path.write_text(serialized,encoding='utf-8')
+ print(json.dumps({'checked':len(sources),'ok':sum(x['status']=='ok' for x in sources),'candidates':len(candidates)},ensure_ascii=False))
+if __name__=='__main__':run()
