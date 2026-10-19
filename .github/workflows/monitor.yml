@@ -1,0 +1,39 @@
+
+name: Monitor de beneficios bancarios
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */2 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Consultar fuentes bancarias
+        run: python scripts/monitor.py
+
+      - name: Guardar resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualizar monitoreo bancario"
+            git push
+          fi
