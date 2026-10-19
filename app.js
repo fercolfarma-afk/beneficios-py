@@ -104,6 +104,7 @@ async function syncCurated(){
  let added=0,updated=0;for(const p of data.promotions||[]){if(!validVerifiedOffer(p)||p.end<today)continue;
  const i=state.promos.findIndex(x=>x.id===p.id);if(i<0){state.promos.push({...p});added++}else if(state.promos[i].verified_at!==p.verified_at){state.promos[i]={...state.promos[i],...p};updated++}}
  if(added||updated)save();else{render();updateSelect()}
+ const hints=document.getElementById('merchantSuggestions');if(hints)hints.innerHTML=[...new Set(state.promos.filter(p=>p.end>=today).map(p=>p.merchant))].sort().map(x=>'<option value="'+escapeHTML(x)+'"></option>').join('');
  if(el)el.textContent=`Catálogo verificado: ${data.promotions?.length||0} fichas publicadas · ${added} nuevas · ${updated} actualizadas. Las promociones incompletas no se aplican.`;
  }catch(e){if(el)el.textContent='No se pudo sincronizar el catálogo: '+e.message}
 }

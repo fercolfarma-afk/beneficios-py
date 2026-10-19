@@ -1,11 +1,15 @@
-# Beneficios PY 2.9 — Primer circuito verificado
+# Beneficios PY 3.0 — extractor inicial por banco
 
-**Qué funciona:** registro local de compras, selección de banco y tarjeta, búsqueda de comercio, carga automática de fichas verificadas desde `data/promociones_verificadas.json`, estimación del beneficio, control mensual de topes y exportación Excel.
+## Qué está implementado
+- Extracción automática de fichas **Itaú** identificadas, cada 2 horas por GitHub Actions.
+- Verificación conservadora de comercio, porcentaje, día y tope contra texto oficial.
+- Sincronización de promociones estructuradas y autocompletado de comercios.
+- Compras anteriores permanecen en `localStorage` y se conserva exportación Excel/JSON.
+- Los demás bancos continúan en el monitor de candidatos: **aún no tienen extractores de condiciones completas**.
+- Si una ficha no es comprobable, se marca para revisión y no se inventan importes.
 
-**Promoción inicial comprobada:** Itaú, Stock, Visa Infinite, sábados, 20% de reintegro, tope de compras G. 3.000.000 por cliente y mes en rubro supermercados, hasta 31/12/2026. Fuente: https://www.itau.com.py/beneficios2/Detalle?b=16586&c=1457. El tope es compartido con compras del mismo rubro incluso fuera de la aplicación, por lo que el saldo local es orientativo.
+## Cómo instalar
+Subir el CONTENIDO de este ZIP a la raíz del repositorio, conservando carpetas `data`, `scripts`, `.github/workflows`. GitHub Actions > Monitor de fuentes oficiales > Run workflow. Revisar el log de «Consultar fuentes» y el campo `extraction_report` de `data/promociones_verificadas.json`. Esperar GitHub Pages, forzar recarga Ctrl+Shift+R.
 
-**Limitaciones:** no hay extracción integral de condiciones de los cinco bancos. El monitor existente consulta fuentes y genera hallazgos pendientes de revisión; no los convierte automáticamente en promociones calculables. Las fichas verificadas se incorporan automáticamente al abrir la app. Solo se incorpora información validada. No se garantiza que el sitio oficial mantenga la promoción sin cambios. No se sincronizan compras entre dispositivos.
-
-**Prueba:** registrar compra con fecha sábado dentro de vigencia, Itaú → Infinite → Stock → G. 200.000. Debe ofrecer 20% y mostrar G. 40.000 estimados. La segunda compra actualiza el consumo mensual. Exportar Excel para guardar en Drive.
-
-**Instalación:** subir todos los archivos y carpetas a la raíz del repositorio; mantener `.github/workflows/monitor.yml`; GitHub Pages publica `main` / raíz. Respaldar JSON antes de actualizar.
+## Limitaciones
+La fuente puede cambiar, bloquear peticiones o publicar condiciones ambiguas. No hay acceso a movimientos bancarios; el saldo es local y puede diferir del cupo real. La validación textual no sustituye revisión humana de restricciones. No se garantiza extracción completa de los cinco bancos ni que las promociones detectadas sean elegibles.
