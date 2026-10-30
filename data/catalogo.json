@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-30T08:58:15+00:00",
+  "generated_at": "2026-10-30T10:52:11+00:00",
   "disclaimer": "Hallazgos no verificados: revisar bases y condiciones antes de crear promociones calculables.",
   "sources": [
     {
       "bank": "Itaú",
       "url": "https://www.itau.com.py/Beneficios",
-      "checked_at": "2026-10-30T08:58:15+00:00",
+      "checked_at": "2026-10-30T10:52:11+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.itau.com.py/Beneficios",
@@ -14,7 +14,7 @@
     {
       "bank": "Sudameris",
       "url": "https://www.sudameris.com.py/personas/beneficios",
-      "checked_at": "2026-10-30T08:58:15+00:00",
+      "checked_at": "2026-10-30T10:52:11+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.sudameris.com.py/personas/beneficios",
@@ -23,7 +23,7 @@
     {
       "bank": "Familiar",
       "url": "https://www.familiar.com.py/promociones-tarjetas",
-      "checked_at": "2026-10-30T08:58:15+00:00",
+      "checked_at": "2026-10-30T10:52:11+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.familiar.com.py/promociones-tarjetas",
@@ -32,7 +32,7 @@
     {
       "bank": "Ueno Bank",
       "url": "https://www.ueno.com.py/personas/tarjetas/",
-      "checked_at": "2026-10-30T08:58:15+00:00",
+      "checked_at": "2026-10-30T10:52:11+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.ueno.com.py/personas/tarjetas/",
@@ -41,7 +41,7 @@
     {
       "bank": "Banco GNB",
       "url": "https://www.bancognb.com.py/",
-      "checked_at": "2026-10-30T08:58:15+00:00",
+      "checked_at": "2026-10-30T10:52:11+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.bancognb.com.py/",
@@ -53,56 +53,56 @@
       "bank": "Itaú",
       "summary": "Tenes 20% de ahorro + 5% adicional con PERSONAL BANK y hasta 10 cuotas sin intereses.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Itaú",
       "summary": "20% de ahorro y hasta 6 cuotas sin intereses.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Itaú",
       "summary": "20% de reintegro.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Itaú",
       "summary": "Tenés 40% de ahorro.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de reintegro",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de Reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "30% de reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-10-30T08:58:15+00:00",
+      "detected_at": "2026-10-30T10:52:11+00:00",
       "status": "pendiente_revision"
     }
   ]
