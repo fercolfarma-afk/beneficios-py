@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-11T02:56:24+00:00",
+  "generated_at": "2026-11-11T05:04:53+00:00",
   "disclaimer": "Hallazgos no verificados: revisar bases y condiciones antes de crear promociones calculables.",
   "sources": [
     {
       "bank": "Itaú",
       "url": "https://www.itau.com.py/Beneficios",
-      "checked_at": "2026-11-11T02:56:24+00:00",
+      "checked_at": "2026-11-11T05:04:53+00:00",
       "status": "ok",
-      "changed": false,
+      "changed": true,
       "final_url": "https://www.itau.com.py/Beneficios",
-      "hash": "21272949a845bc4a3fb03678d4d817323056ef9dd9e7b9f3d26724da1c70f469"
+      "hash": "f9dc72334e540a1f2efd5596c081c2a70a63664e4789344ad82221a76439efaf"
     },
     {
       "bank": "Sudameris",
       "url": "https://www.sudameris.com.py/personas/beneficios",
-      "checked_at": "2026-11-11T02:56:24+00:00",
+      "checked_at": "2026-11-11T05:04:53+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.sudameris.com.py/personas/beneficios",
@@ -23,7 +23,7 @@
     {
       "bank": "Familiar",
       "url": "https://www.familiar.com.py/promociones-tarjetas",
-      "checked_at": "2026-11-11T02:56:24+00:00",
+      "checked_at": "2026-11-11T05:04:53+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.familiar.com.py/promociones-tarjetas",
@@ -32,7 +32,7 @@
     {
       "bank": "Ueno Bank",
       "url": "https://www.ueno.com.py/personas/tarjetas/",
-      "checked_at": "2026-11-11T02:56:24+00:00",
+      "checked_at": "2026-11-11T05:04:53+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.ueno.com.py/personas/tarjetas/",
@@ -41,7 +41,7 @@
     {
       "bank": "Banco GNB",
       "url": "https://www.bancognb.com.py/",
-      "checked_at": "2026-11-11T02:56:24+00:00",
+      "checked_at": "2026-11-11T05:04:53+00:00",
       "status": "ok",
       "changed": false,
       "final_url": "https://www.bancognb.com.py/",
@@ -53,49 +53,49 @@
       "bank": "Itaú",
       "summary": "20% de ahorro y hasta 6 cuotas sin intereses.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Itaú",
       "summary": "20% de reintegro.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Itaú",
       "summary": "Tenes 30% de reintegro con tu AMEX ORO y un 10% adicional con AMEX PLATINUM.",
       "source_url": "https://www.itau.com.py/Beneficios",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de reintegro",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "20% de Reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     },
     {
       "bank": "Familiar",
       "summary": "30% de reintegro en el extracto",
       "source_url": "https://www.familiar.com.py/promociones-tarjetas",
-      "detected_at": "2026-11-11T02:56:24+00:00",
+      "detected_at": "2026-11-11T05:04:53+00:00",
       "status": "pendiente_revision"
     }
   ]
